@@ -1,0 +1,99 @@
+{% extends "repo/base.html" %}
+{% block content %}
+
+<!--IMAGE SEARCH-->
+<form action="{% url 'imageSearch' %}" method="get" class="form-inline my-3 my-lg-3 mx-5 mx-lg-5">
+    {% csrf_token %}
+    <input class="form-control mr-sm-2" type="search" name="imageSearch" placeholder="Search" aria-label="Search">
+    <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+    <div class="text-muted" style="margin-left: 15px;"> Include 'Suggested tags' in search <input type="checkbox"
+            id="vision_tag_search" name="vision_tag_search">
+    </div>
+</form>
+
+<!--LIST OF UPLOADED IMAGES THAT MATCH SEARCH CRITERIA-->
+<table style="text-align: center;" class="my-3 my-lg-3 mx-5 mx-lg-5">
+    <thead>
+        <tr>
+            <th class="py-2 px-2 border_black" style="min-width: 100px;">Thumbnail</th>
+            <th class="py-2 px-2 border_black" style="min-width: 100px;">Title</th>
+            <th class="py-2 px-2 border_black" style="min-width: 225px;">Name</th>
+            <th class="py-2 px-2 border_black" style="min-width: 225px;">Date</th>
+            <th class="py-2 px-2 border_black" style="min-width: 90px;">Size</th>
+            <th class="py-2 px-2 border_black" style="min-width: 100px;">Uploader</th>
+            <th class="py-2 px-2 border_black" style="min-width: 300px;">Tags <br>
+                <div class="text-muted">Hide suggested tags <input type="checkbox" id="hideVisionTags"
+                        onclick="hideVisionTags()">
+                </div>
+                <script>
+                    //Hides the tags suggested by Google Vision API
+                    function hideVisionTags() {
+
+                        var checkBox = document.getElementById("hideVisionTags");
+                        var vision_tags = document.getElementsByClassName("vision_tags");
+
+                        if (checkBox.checked == true) {
+                            for (var i = 0; i < vision_tags.length; i++)
+                                vision_tags[i].style.display = "none";
+                        } else {
+                            for (var i = 0; i < vision_tags.length; i++)
+                                vision_tags[i].style.display = "block";
+                        }
+                    }
+                </script>
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <!--LIST OF UPLOADED IMAGES THAT MATCH SEARCH CRITERIA-->
+        {% if found_images != None %}
+        <a href="{% url 'home' %}"><button class="btn btn-primary my-3 my-lg-3 mx-5 mx-lg-5">Back to Home</button></a>
+        <h5 class=" my-3 my-lg-3 mx-5 mx-lg-5">Search Results: </h5>
+        {% for image in found_images %}
+        {% if image.archived == False %}
+        <tr class="my-3 my-lg-3 mx-3 mx-lg-3 border_black">
+            <td class="py-2 px-2 border_black"><img src="{{ image.image.url }}" style="height: 50px; width: 50px;"></td>
+            <td class="py-2 px-2 border_black">{{ image.title }}</td>
+            <td class="py-2 px-2 border_black"><a href="{{ image.image.url }}" target="_blank">
+                    {{ image.image.name }}</a>
+            </td>
+            <td class="py-2 px-2 border_black">{{ image.date }} EST</td>
+            <td class="py-2 px-2 border_black">{{ image.image.size|filesizeformat }}</td>
+            <td class="py-2 px-2 border_black">{{ image.uploader }}</td>
+            <td class="py-2 px-2 border_black">
+                {% if image.tags != None %}
+                {{ image.tags }}
+                {% endif %}
+                {% if image.vision_tags != "" %}
+                <span class="vision_tags" style="display: block;"><br><strong>Suggested
+                        tags:</strong>
+                    {{ image.vision_tags }}</span>
+                {% endif %}
+            </td>
+            <td class="py-2 px-2 border_black">
+                <!--IMAGE DELETE-->
+                <form action="{% url 'imageDelete' image.id %}" method="POST">
+                    {% csrf_token %}
+                    <input name="imageDelete" type="submit" value="Delete" class="btn btn-danger"
+                        onclick="return confirm('Are you sure you would like to delete this image?');" />
+                </form>
+                <!--IMAGE ARCHIVE-->
+                <form action="{% url 'imageArchive' image.id %}" method="POST">
+                    {% csrf_token %}
+                    <input name="imageArchive" type="submit" value="Archive" class="btn btn-warning"
+                        onclick="return confirm('Are you sure you would like to archive this image?');" />
+                </form>
+            </td>
+        </tr>
+        {% endif %}
+        <!--IF THERE ARE NO IMAGES UPLOADED-->
+        {% empty %}
+        <tr class="my-3 my-lg-3 mx-3 mx-lg-3">
+            <td class="py-2 px-2" colspan="7">No data.</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+</table>
+{% endblock content %}

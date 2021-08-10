@@ -1,0 +1,156 @@
+{% extends "repo/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<!--IMAGE UPLOAD-->
+<h5 class="my-3 my-lg-3 mx-5 mx-lg-5">Upload your image here:</h5>
+<div style="display:block;" class="my-3 my-lg-3 mx-5 mx-lg-5">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <p>Tags are optional. If you have multiple tags, <strong>please separate them with a comma</strong></p>
+        <button class="btn btn-primary" type="submit" class="my-3 my-lg-3">Submit</button>
+    </form>
+
+    <hr>
+</div>
+
+<!--IMAGE SEARCH-->
+<form action="{% url 'imageSearch' %}" method="get" class="form-inline my-3 my-lg-3 mx-5 mx-lg-5">
+    {% csrf_token %}
+    <input class="form-control mr-sm-2" type="search" name="imageSearch" placeholder="Search" aria-label="Search">
+    <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+    <div class="text-muted" style="margin-left: 15px;"> Include 'Suggested tags' in search <input type="checkbox"
+            id="vision_tag_search" name="vision_tag_search">
+    </div>
+</form>
+
+<!--WARNING FOR IMAGE DUPLICATES-->
+{% if current_image_name != None %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert"
+    style="margin-top: auto; margin-bottom: auto;">
+    Due to an image with the same name, image name was changed to
+    '{{ current_image_name }}.'
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+<div>
+    <!--LIST OF UPLOADED IMAGES-->
+    <table style="text-align: center;" class="my-3 my-lg-3 mx-5 mx-lg-5">
+        <thead>
+            <tr>
+                <th class="py-2 px-2 border_black" style="min-width: 100px;">Thumbnail</th>
+                <th class="py-2 px-2 border_black" style="min-width: 100px;">Title</th>
+                <th class="py-2 px-2 border_black" style="min-width: 225px;">Name</th>
+                <th class="py-2 px-2 border_black" style="min-width: 225px;">Date</th>
+                <th class="py-2 px-2 border_black" style="min-width: 90px;">Size</th>
+                <th class="py-2 px-2 border_black" style="min-width: 100px;">Uploader</th>
+                <th class="py-2 px-2 border_black" style="min-width: 300px;">Tags <br>
+                    <div class="text-muted">Hide suggested tags <input type="checkbox" id="hideVisionTags"
+                            onclick="hideVisionTags()">
+                    </div>
+                    <script>
+                        //Hides the tags suggested by google vision api
+                        function hideVisionTags() {
+
+                            var checkBox = document.getElementById("hideVisionTags");
+                            var vision_tags = document.getElementsByClassName("vision_tags");
+
+                            if (checkBox.checked == true) {
+                                for (var i = 0; i < vision_tags.length; i++)
+                                    vision_tags[i].style.display = "none";
+                            } else {
+                                for (var i = 0; i < vision_tags.length; i++)
+                                    vision_tags[i].style.display = "block";
+                            }
+                        }
+                    </script>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--LIST OF UPLOADED IMAGES-->
+            <h5 class="my-4 my-lg-4 mx-5 mx-lg-5">Uploaded Images:</h5>
+            {% for image in images %}
+            {% if image.archived == False %}
+            <tr class="my-3 my-lg-3 mx-3 mx-lg-3 border_black">
+                <td class="py-2 px-2 border_black"><img src="{{ image.image.url }}" style="height: 50px; width: 50px;">
+                </td>
+                <td class="py-2 px-2 border_black">{{ image.title }}</td>
+                <td class="py-2 px-2 border_black"><a href="{{ image.image.url }}" target="_blank">
+                        {{ image.image.name }}</a>
+                </td>
+                <td class="py-2 px-2 border_black">{{ image.date }} EST</td>
+                <td class="py-2 px-2 border_black">{{ image.image.size|filesizeformat }}</td>
+                <td class="py-2 px-2 border_black">{{ image.uploader }}</td>
+                <td class="py-2 px-2 border_black">
+                    {% if image.tags != None %}
+                    {{ image.tags }}
+                    {% endif %}
+                    {% if image.vision_tags != "" %}
+                    <span class="vision_tags" style="display: block;"><br><strong>Suggested
+                            tags:</strong>
+                        {{ image.vision_tags }}
+
+                    </span>
+                    {% endif %}
+                </td>
+                <td class="py-2 px-2 border_black">
+                    <!--IMAGE DELETE-->
+                    <form action="{% url 'imageDelete' image.id %}" method="POST">
+                        {% csrf_token %}
+                        <input name="imageDelete" type="submit" value="Delete" class="btn btn-danger"
+                            onclick="return confirm('Are you sure you want to delete this image?');" />
+                    </form>
+                    <!--IMAGE ARCHIVE-->
+                    <form action="{% url 'imageArchive' image.id %}" method="POST">
+                        {% csrf_token %}
+                        <input name="imageArchive" type="submit" value="Archive" class="btn btn-warning"
+                            onclick="return confirm('Are you sure you want to archive this image?');" />
+                    </form>
+                </td>
+            </tr>
+            {{ image.image.thumbnail }}
+            {% endif %}
+            <!--IF THERE ARE NO IMAGES UPLOADED-->
+            {% empty %}
+            <tr class="my-3 my-lg-3 mx-3 mx-lg-3">
+                <td class="py-2 px-2" colspan="7">No data.</td>
+            </tr>
+            <a class="my-4 my-lg-4 mx-5 mx-lg-5" href="{% url 'home' %}"><button class="btn btn-primary">Click to
+                    Refresh</button></a>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="px-5">
+        <nav aria-label="Image Uploads Pages">
+            <ul class="pagination">
+                {% if images.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ images.previous_page_number }}">&laquo;</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                {% endif %}
+                {% for i in images.paginator.page_range %}
+                {% if images.number == i %}
+                <li class="active page-item"><span class="page-link">{{ i }} <span
+                            class="sr-only">(current)</span></span>
+                </li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if images.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ images.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,43 @@
+{% extends "repo/base.html" %}
+{% block content %}
+
+<h2 class="py-2 mx-5 mx-lg-5">History</h2>
+<a class="my-4 my-lg-4 mx-5 mx-lg-5" href="{% url 'home' %}"><button class="btn btn-primary">Back to Home</button></a>
+<table style="text-align: center;" class="my-3 my-lg-3 mx-5 mx-lg-5">
+    <thead>
+        <tr>
+            <th class="py-2 px-2 border_black" style="min-width: 100px;">Action</th>
+            <th class="py-2 px-2 border_black" style="min-width: 100px;">Performed by</th>
+            <th class="py-2 px-2 border_black" style="min-width: 225px;">Title</th>
+            <th class="py-2 px-2 border_black" style="min-width: 225px;">Name</th>
+            <th class="py-2 px-2 border_black" style="min-width: 90px;">Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!--HISTORY ENTRIES-->
+        {% for entry in history %}
+        <tr class="my-3 my-lg-3 mx-3 mx-lg-3 border_black">
+            {% if entry.action == 'uploaded' %}
+            <td class="py-2 px-2 border_black" style="color: green;">{{ entry.action }}</td>
+            {% else %}
+            <td class="py-2 px-2 border_black" style="color: red;">{{ entry.action }}</td>
+            {% endif %}
+            <td class="py-2 px-2 border_black">{{ entry.user }}</td>
+            <td class="py-2 px-2 border_black">{{ entry.title }}</td>
+            {% if entry.action == 'uploaded' %}
+            <td class="py-2 px-2 border_black"><a href="{{ entry.url }}" target="_blank">{{ entry.name }}</a></td>
+            {% else %}
+            <td class="py-2 px-2 border_black">{{ entry.name }}</td>
+            {% endif %}
+            <td class="py-2 px-2 border_black">{{ entry.date }} EST</td>
+            <!--IF THERE ARE NO IMAGES UPLOADED-->
+            {% empty %}
+        <tr class="my-3 my-lg-3 mx-3 mx-lg-3">
+            <td class="py-2 px-2" colspan="5">No data.</td>
+        </tr>
+        <a class="my-4 my-lg-4 mx-3 mx-lg-3" href="{% url 'history' %}"><button class="btn btn-primary">Click to
+                Refresh</button></a>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

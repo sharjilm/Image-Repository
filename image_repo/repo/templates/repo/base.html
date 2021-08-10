@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="{% static 'repo/main.css' %}">
+
+    <title>Image Repo</title>
+
+    <style>
+      .border_black {
+          border: 1px solid black;
+      }
+
+      .toolbar_links {
+          color: rgb(255, 255, 255);
+      }
+
+      .toolbar_links:hover {
+          color: rgb(199, 199, 199);
+      }
+  </style>
+</head>
+<body style="padding-top:70px;">
+    <nav class="navbar navbar-expand-md fixed-top px-3" style="background-color: rgb(13, 57, 66)">
+      <a class="navbar-brand mx-3" href="{% url 'home' %}" style="color: rgb(242, 240, 247);">Image Repo</a>
+      <a class=" nav-item nav-link mx-3 toolbar_links" href="{% url 'history' %}">History</a>
+      <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav ml-auto">
+              {% if user.is_authenticated %}
+              <li class="nav-item px-3 nav-link" style="color: rgb(242, 240, 247);">Logged in as {{ user.username }}:
+              </li>
+              <li class="nav-item px-3"><a class="nav-item nav-link toolbar_links"
+                      href="{% url 'imageViewArchive' %}">Archives</a>
+              </li>
+
+              <li class="nav-item px-3"><a class="nav-item nav-link toolbar_links"
+                      href="{% url 'logout' %}">Logout</a></li>
+              {% else %}
+              <li class="nav-item px-3"><a class="nav-item nav-link toolbar_links" href="{% url 'login' %}">Login</a>
+              </li>
+              <li class="nav-item px-3"><a class="nav-item nav-link toolbar_links"
+                      href="{% url 'register' %}">Register</a></li>
+              {% endif %}
+          </ul>
+      </div>
+    </nav>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+    <hr>
+    <p class="text-muted" style="text-align: center;">Copyright © 2021 Sharjil Mohsin</p>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
