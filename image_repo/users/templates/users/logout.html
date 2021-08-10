@@ -1,0 +1,14 @@
+{% extends "repo/base.html" %}
+
+{% block content %}
+<div class="px-5 py-5">
+
+    <h2>You have been logged out</h2>
+    <div class="border-top pt-3">
+        <a href="{% url 'login' %}" class="ml-1"><button class="btn btn-outline-primary">Log In Again</button></a>
+        <a class="my-4 my-lg-4 mx-5 mx-lg-5" href="{% url 'home' %}"><button class="btn btn-outline-primary">Back to
+                Home</button></a>
+    </div>
+</div>
+
+{% endblock content %}
