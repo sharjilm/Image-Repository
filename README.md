@@ -17,7 +17,7 @@
 <li>AWS S3 and Google Vision API</li>
 </ol>
 
-<h2>1) Introduction:</h2>
+<h2>1) Introduction</h2>
 
 <p>This image repository application is built using Django and Python. Users can upload images, download, archive, and search for images that have been uploaded into the repo. Using object detection (cvlib by default and Google Vision API if the credentials are provided), the image will also have suggested tags attached to it that users can use to find the uploaded images. The image repo storage uses the AWS S3 Bucket to storage all the uploaded images for both the local version and the production (<a href="https://imagerepoweb.herokuapp.com/">imagerepoweb.herokuapp.com</a>) version. This application also utilizes Google Vision API and TensorFlow to use object detection and uses trained machine learning models to classify objects. Notes about adding Google Vision API and S3 bucket credentials, if using the code in the repo, are in the last section (section 4) of the README.</p>
 
@@ -43,31 +43,28 @@
     <img src='./img/history.png'/>
     </ol>
 
-<br>
 
-<h2>3) Instructions for running the program from the repo:</h2>
-<p>Application requires Python (v3.7.3 or a higher 64-bit version)</p>
-<u>Starting using the bash script:</u>
+<h2>3) Instructions for running the program from the repo</h2>
+<p>Application requires Python (v3.7.3 or a higher 64-bit version). The program can be run either using the bash script or manually.</p>
+<u>1) Starting using the bash script:</u>
     <ol>
-    <li>Download/clone repo (can download as ZIP)</li>
-    <li>In your terminal enter the main directory of the folder “Image-Repository”</li>
-    <li>Run 'chmod u+x start.sh'</li>
-    <li>Run './start.sh' or 'bash start.sh' for Windows</li>
-    <li>In your browser go to http://127.0.0.1:8000</li>
+    <li>Download/clone repo (can download as ZIP).</li>
+    <li>In your terminal enter the main directory of the folder “Image-Repository”.</li>
+    <li>Run 'chmod u+x start.sh'.</li>
+    <li>Run './start.sh' or 'bash start.sh' for Windows.</li>
+    <li>In your browser go to http://127.0.0.1:8000.</li>
+    </ol>
+<u>2) Manual start:</u>
+    <ol>
+    <li>Download/clone repo (can download as ZIP).</li>
+    <li>In your terminal enter the main directory of the folder “Image-Repository”.</li>
+    <li>Run 'pip3 install -r requirements.txt —user'.</li>
+    <li>Run 'python3 image_repo/manage.py makemigrations'.</li>
+    <li>Run 'python3 image_repo/manage.py migrate'.</li>
+    <li>Run 'python3 image_repo/manage.py runserver'.</li>
+    <li>In your browser go to http://127.0.0.1:8000.</li>
     </ol>
 
-<u>Manual start:</u>
-    <ol>
-    <li>Download/clone repo (can download as ZIP)</li>
-    <li>In your terminal enter the main directory of the folder “Image-Repository”</li>
-    <li>Run 'pip3 install -r requirements.txt —user'</li>
-    <li>Run 'python3 image_repo/manage.py makemigrations'</li>
-    <li>Run 'python3 image_repo/manage.py migrate'</li>
-    <li>Run 'python3 image_repo/manage.py runserver'</li>
-    <li>In your browser go to http://127.0.0.1:8000</li>
-    </ol>
-
-<br/>
 
 <h2>4) AWS S3 and Google Vision API</h2>
 <p>Due to security concerns, the AWS S3 (for image storage) and the Google Vision API (for image object detection) credentials could not be provided in the repo. As a default, the application uses local file storage for storing the images and uses the Python library 'cvlib' for object detection.</p>
@@ -90,5 +87,3 @@ For instructions on how to get the AWS credentials <a href="https://testdriven.i
 
 <p>Once the credentials are provided and added in the .env file, they can be called into the settings file by uncommenting these lines in the settings.py file.</p>
 <img src="./img/settings.jpg">
-
-
