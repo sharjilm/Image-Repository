@@ -15,11 +15,12 @@
         <li>Manual start</li>
     </ul>
 <li>AWS S3 and Google Vision API</li>
+<li>Next Steps</li>
 </ol>
 
 <h2>1) Introduction</h2>
 
-<p>This image repository application is built using Django and Python. Users can upload images, download, archive, and search for images that have been uploaded into the repo. Using object detection (cvlib by default and Google Vision API if the credentials are provided), the image will also have suggested tags attached to it that users can use to find the uploaded images. The image repo storage uses the AWS S3 Bucket to storage all the uploaded images for both the local version and the production (<a href="https://imagerepoweb.herokuapp.com/">imagerepoweb.herokuapp.com</a>) version. This application also utilizes Google Vision API and TensorFlow to use object detection and uses trained machine learning models to classify objects. Notes about adding Google Vision API and S3 bucket credentials, if using the code in the repo, are in the last section (section 4) of the README.</p>
+<p>This image repository application is built using Django and Python. Users can upload images, download, archive, and search for images that have been uploaded into the repo. Using object detection (cvlib by default and Google Vision API if the credentials are provided), the image will also have suggested tags attached to it that users can use to find the uploaded images. The image repo storage uses the AWS S3 Bucket to storage all the uploaded images for both the local version and the production (<a href="https://imagerepoweb.herokuapp.com/">imagerepoweb.herokuapp.com</a>) version. This image repository has been tested using Python's unittest unit testing framework on the objects used in this application. For more details, please navigate to the Image-Repository/image_repo/repo/tests.py file to view the test cases. This application also utilizes Google Vision API and TensorFlow to use object detection and uses trained machine learning models to classify objects. Notes about adding Google Vision API and S3 bucket credentials, if using the code in the repo, are in the last section (section 4) of the README.</p>
 
 
 <h2>2) Quick instructions on using the application</h2>
@@ -87,3 +88,10 @@ For instructions on how to get the AWS credentials <a href="https://testdriven.i
 
 <p>Once the credentials are provided and added in the .env file, they can be called into the settings file by uncommenting these lines in the settings.py file.</p>
 <img src="./img/settings.jpg">
+
+<h2>5) Next Steps</h2>
+
+- Adding a feature that allows the user to reset their password in case they forget it, as well as reset both their username and password if they wish. This can be done by setting a reset link to the email they used when they signed up.
+- Implementing automated testing in order to increase the effectiveness, efficiency and coverage of the software testing on this application.
+- Creating a video demo of how to use this application, for users who prefer to watch a visual demonstration rather than reading the instructions on README.
+- Changing this application from an ordinary image repository to an image repository with a capacity to sell products. This new feature would involve users of different kinds (they can be either vendors or customers). Vendors would be able to create a new image to sell and set their price, handle money, manage inventory, and set discounts on their products, while customers would be able to buy these images using their bank account linked to their accounts.
